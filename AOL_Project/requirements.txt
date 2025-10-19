@@ -1,6 +1,0 @@
-flask
-ultralytics
-opencv-python
-pillow
-numpy
-werkzeug
