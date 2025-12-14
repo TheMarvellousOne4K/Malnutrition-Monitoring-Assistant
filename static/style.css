@@ -283,3 +283,30 @@ footer {
   border-radius: 12px;
   box-shadow: 0 5 1px rgba(0,0,0,0.2);
 }
+
+.score-box {
+  background: #ffe7cf;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.warning-box {
+  background: #ffd6d6;
+  border-left: 6px solid red;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  color: #600;
+}
+
+.recommend-box {
+  background: #e6ffe6;
+  border-left: 6px solid green;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  color: #064;
+}

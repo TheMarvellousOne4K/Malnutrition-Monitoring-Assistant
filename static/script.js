@@ -78,8 +78,9 @@ analyzeBtn?.addEventListener("click", async (e) => {
   }
 
   if (data.result_image) {
-    const imgPath = data.result_image || data.analyzed_image;
-    const url = imgPath.startsWith("/") ? imgPath : `/${imgPath.replace(/\\/g, "/")}`;
+    const url = data.result_image.startsWith("/")
+      ? data.result_image
+      : `/${data.result_image.replace(/\\/g, "/")}`;
     previewBox.innerHTML = `<img src="${url}?t=${Date.now()}" class="preview-img">`;
   }
 
@@ -92,65 +93,87 @@ analyzeBtn?.addEventListener("click", async (e) => {
   nutritionBox.classList.remove("hidden");
   setTimeout(() => nutritionBox.classList.add("show"), 50);
 
-  if (data.items && Array.isArray(data.items)) {
+  if (Array.isArray(data.items)) {
     data.items.forEach((item) => {
-      if (!item.name || !item.nutrition || Object.keys(item.nutrition).length === 0) {
-        return;
-      }
-
+      if (!item.name || !item.nutrition) return;
       hasValidItems = true;
       let nutritionList = "";
 
       for (const [key, value] of Object.entries(item.nutrition)) {
         const match = value.toString().match(/^([\d.]+)\s*(.*)$/);
-        if (!match) {
-          continue;
-        }
-
+        if (!match) continue;
         const num = parseFloat(match[1]);
         const unit = match[2] || "";
-        multiplied = Math.round(num * item.count * 1000) / 1000;
+        const multiplied = Math.round(num * item.count * 1000) / 1000;
         nutritionList += `<li>${key}: ${multiplied}${unit}</li>`;
 
         if (!isNaN(num)) {
-          if (!totals[key]) {
-           totals[key] = { value: 0, unit };
-          }
+          if (!totals[key]) totals[key] = { value: 0, unit };
           totals[key].value += multiplied;
         }
       }
 
-      if (nutritionList.trim() === ""){ 
-        return;
-      }
-
-      html += `<div class="nutrition-item">
-        <strong>${item.count} ${item.name}(s)</strong>
-        <ul>${nutritionList}</ul>
-      </div>`;
+      if (nutritionList)
+        html += `
+        <div class="nutrition-item">
+          <strong>${item.count} ${item.name}(s)</strong>
+          <ul>${nutritionList}</ul>
+        </div>
+      `;
     });
   }
 
   if (hasValidItems) {
-    nutritionBox.classList.remove("hidden");
-    setTimeout(() => nutritionBox.classList.add("show"), 50);
     nutritionContent.innerHTML = html;
 
     if (Object.keys(totals).length > 0) {
       const totalBox = document.createElement("div");
       totalBox.classList.add("nutrition-total");
       let totalHTML = `<h3>Total Nutritional Values</h3><ul>`;
-
       for (const [key, obj] of Object.entries(totals)) {
-        const rounded = Math.round((obj.value + Number.EPSILON) * 1000) / 1000;
+        const rounded = Math.round(obj.value * 1000) / 1000;
         totalHTML += `<li><strong>${key}</strong>: ${rounded}${obj.unit}</li>`;
       }
-
       totalHTML += `</ul>`;
       totalBox.innerHTML = totalHTML;
       nutritionBox.appendChild(totalBox);
     }
   } else {
     nutritionContent.innerHTML = `<p style="text-align:center; color:#666; font-style:italic;">No food detected</p>`;
+  }
+
+  const scoreBox = document.getElementById("nutritionScoreBox");
+  const allergyBox = document.getElementById("allergyBox");
+  const recommendationBox = document.getElementById("recommendationBox");
+
+  if (data.nutrition_score && scoreBox) {
+    scoreBox.innerHTML = `
+      <div class="score-box">
+        Nutrition Score: <strong>${data.nutrition_score.score}</strong>
+        (${data.nutrition_score.label})<br>
+        Calories: ${data.nutrition_coverage["Calories (%)"]}% |
+        Protein: ${data.nutrition_coverage["Protein (%)"]}%<br>
+        Vitamins: ${data.micronutrient_coverage["Vitamins (%)"]}% |
+        Minerals: ${data.micronutrient_coverage["Minerals (%)"]}%
+      </div>
+    `;
+  }
+
+  if (data.allergy_information && allergyBox) {
+    allergyBox.innerHTML = `
+      <div class="warning-box">
+        <strong>Allergy Information</strong>
+        <ul>${data.allergy_information.map(a => `<li>${a}</li>`).join("")}</ul>
+      </div>
+    `;
+  }
+
+  if (data.recommendations && recommendationBox) {
+    recommendationBox.innerHTML = `
+      <div class="recommend-box">
+        <strong>Recommendations</strong>
+        <ul>${data.recommendations.map(r => `<li>${r}</li>`).join("")}</ul>
+      </div>
+    `;
   }
 });
