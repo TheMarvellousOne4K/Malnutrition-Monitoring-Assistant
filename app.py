@@ -5,7 +5,7 @@ import cv2
 import os
 
 app = Flask(__name__)
-model = YOLO("yolov8n.pt")
+model = YOLO("best.pt")
 
 def extract_number(value):
     return float(''.join(c for c in value if c.isdigit() or c == '.'))
@@ -55,15 +55,15 @@ def predict():
 
     # Dataset
     nutrition_data = {
-        "apple": {
-            "Calories": "52kcal",
-            "Sugar": "10g",
-            "Protein": "0.3g",
-            "Carbohydrates": "14g",
+        "orange": {
+            "Calories": "47kcal",
+            "Sugar": "9g",
+            "Protein": "0.9g",
+            "Carbohydrates": "12g",
             "Fiber": "2.4g",
-            "Fat": "0.2g",
-            "Vitamin C": "4.6mg",
-            "Potassium": "107mg",
+            "Fat": "0.1g",
+            "Vitamin C": "53.2mg",
+            "Calcium": "40mg",
             "Allergens": []
         },
         "banana": {
@@ -77,136 +77,15 @@ def predict():
             "Vitamin C": "8.7mg",
             "Allergens": ["Latex"]
         },
-        "grapes": {
-            "Calories": "69kcal",
-            "Sugar": "16g",
-            "Protein": "0.7g",
-            "Carbohydrates": "18g",
-            "Fiber": "0.9g",
-            "Fat": "0.2g",
-            "Vitamin C": "3.2mg",
-            "Vitamin K": "14.6µg",
-            "Allergens": []
-        },
-        "orange": {
-            "Calories": "47kcal",
-            "Sugar": "9g",
-            "Protein": "0.9g",
-            "Carbohydrates": "12g",
+        "apple": {
+            "Calories": "52kcal",
+            "Sugar": "10g",
+            "Protein": "0.3g",
+            "Carbohydrates": "14g",
             "Fiber": "2.4g",
-            "Fat": "0.1g",
-            "Vitamin C": "53.2mg",
-            "Calcium": "40mg",
-            "Allergens": []
-        },
-        "pineapple": {
-            "Calories": "50kcal",
-            "Sugar": "10g",
-            "Protein": "0.5g",
-            "Carbohydrates": "13g",
-            "Fiber": "1.4g",
-            "Fat": "0.1g",
-            "Vitamin C": "47.8mg",
-            "Manganese": "0.9mg",
-            "Allergens": []
-        },
-        "pear": {
-            "Calories": "57kcal",
-            "Sugar": "10g",
-            "Protein": "0.4g",
-            "Carbohydrates": "15g",
-            "Fiber": "3.1g",
-            "Fat": "0.1g",
-            "Vitamin C": "4.3mg",
-            "Potassium": "116mg",
-            "Allergens": []
-        },
-        "avocado": {
-            "Calories": "160kcal",
-            "Sugar": "0.7g",
-            "Protein": "2g",
-            "Carbohydrates": "9g",
-            "Fiber": "7g",
-            "Fat": "15g",
-            "Vitamin K": "21µg",
-            "Vitamin E": "2.1mg",
-            "Allergens": []
-        },
-        "broccoli": {
-            "Calories": "34kcal",
-            "Sugar": "1.7g",
-            "Protein": "2.8g",
-            "Carbohydrates": "7g",
-            "Fiber": "2.6g",
-            "Fat": "0.4g",
-            "Vitamin C": "89.2mg",
-            "Vitamin K": "101.6µg",
-            "Allergens": []
-        },
-        "carrot": {
-            "Calories": "41kcal",
-            "Sugar": "4.7g",
-            "Protein": "0.9g",
-            "Carbohydrates": "10g",
-            "Fiber": "2.8g",
             "Fat": "0.2g",
-            "Vitamin A": "835µg",
-            "Vitamin K": "13.2µg",
-            "Allergens": []
-        },
-        "onion": {
-            "Calories": "40kcal",
-            "Sugar": "4.2g",
-            "Protein": "1.1g",
-            "Carbohydrates": "9g",
-            "Fiber": "1.7g",
-            "Fat": "0.1g",
-            "Vitamin C": "7.4mg",
-            "Vitamin B-6": "0.1mg",
-            "Allergens": []
-        },
-        "potato": {
-            "Calories": "77kcal",
-            "Sugar": "0.8g",
-            "Protein": "2g",
-            "Carbohydrates": "17g",
-            "Fiber": "2.2g",
-            "Fat": "0.1g",
-            "Vitamin C": "19.7mg",
-            "Potassium": "421mg",
-            "Allergens": []
-        },
-        "eggplant": {
-            "Calories": "25kcal",
-            "Sugar": "3.5g",
-            "Protein": "1g",
-            "Carbohydrates": "6g",
-            "Fiber": "3g",
-            "Fat": "0.2g",
-            "Manganese": "0.2mg",
-            "Folate": "22µg",
-            "Allergens": []
-        },
-        "cabbage": {
-            "Calories": "25kcal",
-            "Sugar": "3.2g",
-            "Protein": "1.3g",
-            "Carbohydrates": "6g",
-            "Fiber": "2.5g",
-            "Fat": "0.1g",
-            "Vitamin K": "76µg",
-            "Vitamin C": "36.6mg",
-            "Allergens": []
-        },
-        "garlic": {
-            "Calories": "149kcal",
-            "Sugar": "1g",
-            "Protein": "6.4g",
-            "Carbohydrates": "33g",
-            "Fiber": "2.1g",
-            "Fat": "0.5g",
-            "Vitamin C": "31.2mg",
-            "Manganese": "1.7mg",
+            "Vitamin C": "4.6mg",
+            "Potassium": "107mg",
             "Allergens": []
         },
         "cucumber": {
@@ -220,17 +99,6 @@ def predict():
             "Water": "95%",
             "Allergens": []
         },
-        "pumpkin": {
-            "Calories": "26kcal",
-            "Sugar": "2.8g",
-            "Protein": "1g",
-            "Carbohydrates": "7g",
-            "Fiber": "0.5g",
-            "Fat": "0.1g",
-            "Vitamin A": "426µg",
-            "Vitamin C": "9mg",
-            "Allergens": []
-        },
         "corn": {
             "Calories": "86kcal",
             "Sugar": "3.2g",
@@ -242,37 +110,26 @@ def predict():
             "Vitamin B1": "0.2mg",
             "Allergens": ["Corn"]
         },
-        "tofu": {
-            "Calories": "76kcal",
-            "Sugar": "0.3g",
-            "Protein": "8g",
-            "Carbohydrates": "1.9g",
-            "Fiber": "0.3g",
-            "Fat": "4.8g",
-            "Calcium": "350mg",
-            "Iron": "5.4mg",
-            "Allergens": ["Soy"]
+        "broccoli": {
+            "Calories": "34kcal",
+            "Sugar": "1.7g",
+            "Protein": "2.8g",
+            "Carbohydrates": "7g",
+            "Fiber": "2.6g",
+            "Fat": "0.4g",
+            "Vitamin C": "89.2mg",
+            "Vitamin K": "101.6µg",
+            "Allergens": []
         },
-        "tempe": {
-            "Calories": "192kcal",
-            "Sugar": "0g",
-            "Protein": "19g",
-            "Carbohydrates": "9g",
-            "Fiber": "1.4g",
-            "Fat": "11g",
-            "Iron": "2.7mg",
-            "Calcium": "111mg",
-            "Allergens": ["Soy"]
-        },
-        "chicken": {
-            "Calories": "165kcal",
-            "Sugar": "0g",
-            "Protein": "31g",
-            "Carbohydrates": "0g",
-            "Fiber": "0g",
-            "Fat": "3.6g",
-            "Vitamin B-6": "0.6mg",
-            "Iron": "1mg",
+        "potato": {
+            "Calories": "77kcal",
+            "Sugar": "0.8g",
+            "Protein": "2g",
+            "Carbohydrates": "17g",
+            "Fiber": "2.2g",
+            "Fat": "0.1g",
+            "Vitamin C": "19.7mg",
+            "Potassium": "421mg",
             "Allergens": []
         },
         "egg": {
@@ -285,6 +142,28 @@ def predict():
             "Vitamin D": "2.2µg",
             "Calcium": "50mg",
             "Allergens": ["Egg"]
+        },
+        "onion": {
+            "Calories": "40kcal",
+            "Sugar": "4.2g",
+            "Protein": "1.1g",
+            "Carbohydrates": "9g",
+            "Fiber": "1.7g",
+            "Fat": "0.1g",
+            "Vitamin C": "7.4mg",
+            "Vitamin B-6": "0.1mg",
+            "Allergens": []
+        },
+        "carrot": {
+            "Calories": "41kcal",
+            "Sugar": "4.7g",
+            "Protein": "0.9g",
+            "Carbohydrates": "10g",
+            "Fiber": "2.8g",
+            "Fat": "0.2g",
+            "Vitamin A": "835µg",
+            "Vitamin K": "13.2µg",
+            "Allergens": []
         }
     }
 

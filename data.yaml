@@ -1,0 +1,25 @@
+train: dataset/train
+val: dataset/val
+test: dataset/test
+
+nc: 10
+names:
+  [
+    "apple",
+    "banana",
+    "broccoli",
+    "carrot",
+    "corn",
+    "cucumber",
+    "egg",
+    "onion",
+    "orange",
+    "potato",
+  ]
+
+roboflow:
+  workspace: aol-ai-fdkfd
+  project: food-nutrition-detection-nqvae
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/aol-ai-fdkfd/food-nutrition-detection-nqvae/dataset/1
